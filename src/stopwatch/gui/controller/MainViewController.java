@@ -34,11 +34,14 @@ public class MainViewController implements Initializable {
 
     private TimerTask mTask;
 
+    private boolean mIsTimerRunning;
+
     public MainViewController() {
         mTimer = new SimpleStringProperty();
         mTimeTracker = 0;
         mFormatter = new DecimalFormat("0.##");
         mTimer.setValue(mFormatter.format(mTimeTracker));
+        mIsTimerRunning = false;
 
     }
 
@@ -49,28 +52,39 @@ public class MainViewController implements Initializable {
 
     @FXML
     private void handleStartButton(ActionEvent event) {
-        //Creates a TimerTask to specify what to be done.
-        mTask = new TimerTask() {
-            @Override
-            public void run() {
-                mTimeTracker += 0.01;
-                Platform.runLater(() -> {
-                    mTimer.setValue(mFormatter.format(mTimeTracker));
-                });
-            }
-        };
-        //Creates a timer to control when to do the TimerTask.
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(mTask, 10, 10);
+        if (!mIsTimerRunning) {
+            //Creates a TimerTask to specify what to be done.
+            mTask = new TimerTask() {
+                @Override
+                public void run() {
+                    mTimeTracker += 0.01;
+                    Platform.runLater(() -> {
+                        mTimer.setValue(mFormatter.format(mTimeTracker));
+                    });
+                }
+            };
+            //Creates a timer to control when to do the TimerTask.
+            Timer timer = new Timer();
+            timer.scheduleAtFixedRate(mTask, 10, 10);
+
+            mIsTimerRunning = true;
+        }
     }
 
     @FXML
     private void handleStopButton(ActionEvent event) {
         try {
             mTask.cancel();
+            mIsTimerRunning = false;
         } catch (RuntimeException ex) {
 
         }
+    }
+
+    @FXML
+    private void handleResetButton(ActionEvent event) {
+        mTimeTracker = 0;
+        mTimer.setValue(mFormatter.format(mTimeTracker));
     }
 
 }
