@@ -39,7 +39,7 @@ public class MainViewController implements Initializable {
     public MainViewController() {
         mTimer = new SimpleStringProperty();
         mTimeTracker = 0;
-        mFormatter = new DecimalFormat("0.##");
+        mFormatter = new DecimalFormat("0.00");
         mTimer.setValue(mFormatter.format(mTimeTracker));
         mIsTimerRunning = false;
 
@@ -64,7 +64,7 @@ public class MainViewController implements Initializable {
                 }
             };
             //Creates a timer to control when to do the TimerTask.
-            Timer timer = new Timer();
+            Timer timer = new Timer(true);
             timer.scheduleAtFixedRate(mTask, 10, 10);
 
             mIsTimerRunning = true;
